@@ -37,7 +37,21 @@ $content-thumb-height: 144px;
 .nicofeed-feed {
     padding-top: 1rem;
     overflow-y: auto;
-    @include nicofeed-default-anchor($text-decoration: none);
+
+    .nicofeed-user, .nicofeed-activity-body {
+        a {
+            color: black;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    }
+    .nicofeed-activity-body {
+        a:visited {
+            color: gray;
+        }
+    }
 }
 
 /* TODO: These should be customizable, i.e. these styles should be

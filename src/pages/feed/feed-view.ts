@@ -162,9 +162,10 @@ export class FeedView {
         const divTimestamp = frag.querySelector<HTMLDivElement>("div.nicofeed-activity-timestamp")!;
         divTimestamp.textContent = activity.timestamp.toLocaleString();
 
-        const aContent = frag.querySelector<HTMLAnchorElement>("a.nicofeed-content-anchor")!;
         if (activity.content) {
-            aContent.href = activity.content.url;
+            for (const aContent of frag.querySelectorAll<HTMLAnchorElement>("a.nicofeed-content-anchor")) {
+                aContent.href = activity.content.url;
+            }
 
             const imgContentThumb = frag.querySelector<HTMLImageElement>("img.nicofeed-content-thumb")!;
             imgContentThumb.src = activity.thumbnailUrl;
@@ -176,7 +177,8 @@ export class FeedView {
             spanContentTitle.textContent = activity.content.title;
         }
         else {
-            aContent.classList.add("hide");
+            const divContent = frag.querySelector<HTMLDivElement>("div.nicofeed-content")!;
+            divContent.classList.add("hide");
         }
 
         // Setup a Foundation dropdown menu for muting.

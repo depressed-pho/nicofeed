@@ -30,10 +30,13 @@ h1 {
     justify-content: flex-end;
 }
 
-@mixin nicofeed-default-anchor($text-decoration: underline) {
+@mixin nicofeed-default-anchor($text-decoration: underline, $hover-decoration: underline) {
     a {
         color: black;
         text-decoration: $text-decoration;
+    }
+    a:hover {
+        text-decoration: $hover-decoration;
     }
     a:visited {
         color: gray;
