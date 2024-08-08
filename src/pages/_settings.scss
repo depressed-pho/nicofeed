@@ -1,0 +1,48 @@
+@import "~foundation-sites/scss/util/util";
+
+/* Foundation */
+$card-padding: 0.7rem;
+$dropdownmenu-arrows: false;
+$topbar-padding: 0.1rem;
+$progress-margin-bottom: 0;
+
+h1 {
+    font-size: 1.5em !important;
+}
+
+.menu {
+    a {
+        cursor: pointer;
+    }
+    li:hover {
+        @extend .is-active !optional;
+    }
+}
+.top-bar .menu {
+    .fi {
+        font-size: 150%;
+    }
+}
+
+/* A workaround for a possible bug in foundation-sites@6.7.1:
+   .menu.align-right has no effect without this: */
+.menu.align-right {
+    justify-content: flex-end;
+}
+
+@mixin nicofeed-default-anchor($text-decoration: underline) {
+    a {
+        color: black;
+        text-decoration: $text-decoration;
+    }
+    a:visited {
+        color: gray;
+    }
+}
+
+/* Motion UI */
+$motion-ui-speeds: (
+    default: 250ms,
+    slow: 500ms,
+    fast: 125ms
+);

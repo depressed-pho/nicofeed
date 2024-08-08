@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?><!-- -*- nxml -*- -->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>設定 :: Nicofeed</title>
+    <link rel="icon" href="/assets/icon.svg" />
+    <link rel="stylesheet" href="config.css" />
+    <script type="text/javascript" src="config.js"></script>
+  </head>
+  <body>
+    <form>
+      <div class="grid-container">
+        <div class="grid-y">
+          <!-- Row: slider label -->
+          <div class="cell">
+            <label for="polling-interval-slider">
+              新着情報を自動取得する間隔:
+            </label>
+          </div>
+          <!-- Row: slider -->
+          <div class="cell grid-x grid-margin-x">
+            <div class="cell small-9">
+              <input id="polling-interval-slider" type="range" min="0" max="1" step="any"
+                     aria-describedby="polling-interval-help-text" />
+            </div>
+            <div class="cell small-3 nicofeed-vertical-center-container">
+              <div class="nicofeed-vertical-center" id="polling-interval-value"
+                   data-disabled-label="disabled"></div>
+            </div>
+          </div>
+          <!-- Row: slider help text -->
+          <div class="cell">
+            <p class="help-text" id="polling-interval-help-text">
+              間隔を最大にすることで自動取得を停止できます。
+            </p>
+          </div>
+
+          <!-- Row: slider label -->
+          <div class="cell">
+            <label for="ttl-slider">
+              アクティビティ忘却までの時間:
+            </label>
+          </div>
+          <!-- Row: slider -->
+          <div class="cell grid-x grid-margin-x">
+            <div class="cell small-9">
+              <input id="ttl-slider" type="range" min="0" max="1" step="any"
+                     aria-describedby="ttl-help-text" />
+            </div>
+            <div class="cell small-3 nicofeed-vertical-center-container">
+              <div class="nicofeed-vertical-center" id="ttl-value"
+                   data-disabled-label="disabled"></div>
+            </div>
+          </div>
+          <!-- Row: slider help text -->
+          <div class="cell">
+            <p class="help-text" id="ttl-help-text">
+              アクティビティがスクロールアウトしてからその情報が消去されるまでの期間です。
+              たとえば 15 日に設定した場合、上方向にスクロールすることで画面外へ行った過去の情報が
+              スクロールアウト時点から 15 日後に消去されます。
+              ただし発生からの経過時間が一ヶ月に満たない情報は消去されません。
+            </p>
+          </div>
+
+          <!-- Row: Advanced settings -->
+          <div class="cell">
+            <fieldset class="fieldset nicofeed-hidden-fieldset">
+              <legend>
+                <a id="toggle-advanced" class="nicofeed-toggle-fieldset-visibility">
+                  <i class="icofont icofont-caret-right" data-for="hidden"></i>
+                  <i class="icofont icofont-caret-down hide" data-for="shown"></i>
+                  高度な設定
+                </a>
+              </legend>
+              <p class="help-text">
+                通常これらの設定を変更する必要はありません。
+              </p>
+              <div class="grid-y">
+                <div class="cell">
+                  <label for="fetch-delay-slider">
+                    サーバーに連続で問い合わせる際のディレイ:
+                  </label>
+                </div>
+                <div class="cell grid-x grid-margin-x">
+                  <div class="cell small-9">
+                    <input id="fetch-delay-slider" type="range" min="0" max="1" step="any" />
+                  </div>
+                  <div class="cell small-3 nicofeed-vertical-center-container">
+                    <div class="nicofeed-vertical-center" id="fetch-delay-value"></div>
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+
+          <!-- Row: reset button -->
+          <div class="cell">
+            <ul class="menu align-right">
+              <li>
+                <button type="button" class="button warning" id="reset-to-default">
+                  初期設定に戻す
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </form>
+  </body>
+</html>

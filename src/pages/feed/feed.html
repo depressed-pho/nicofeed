@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?><!-- -*- nxml -*- -->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>Nicofeed</title>
+    <link rel="icon" href="/assets/icon.svg" />
+    <link rel="stylesheet" href="feed.css" />
+    <script type="text/javascript" src="feed.js"></script>
+  </head>
+  <body>
+    <!-- The root grid covers the entire viewport, and has two
+         children namely the top bar and the main pane. -->
+    <div class="grid-y grid-frame">
+
+      <!-- Top navigation bar -->
+      <div class="cell top-bar">
+        <div class="top-bar-left">
+          <ul class="menu">
+            <li class="menu-text">Nicofeed</li>
+          </ul>
+        </div>
+        <div class="top-bar-right">
+          <ul class="menu">
+            <li class="menu-text">
+              <progress class="nicofeed-loading-progress nicofeed-transparent" max="1" />
+            </li>
+            <li>
+              <!-- The update button is initially disabled. -->
+              <button type="button" class="button clear disabled"
+                      data-for="check-for-updates" title="新着データを取得する">
+                <i class="fi fi-refresh"></i>
+              </button>
+            </li>
+            <li>
+              <ul class="dropdown menu" data-dropdown-menu="">
+                <li class="is-dropdown-submenu-parent">
+                  <a>
+                    <i class="fi fi-widget"></i>
+                  </a>
+                  <ul class="menu" data-for="control">
+                    <li>
+                      <a data-for="edit-filter-set">フィルタリングルールを編集...</a>
+                    </li>
+                    <li>
+                      <a data-for="edit-preferences">
+                        設定...
+                      </a>
+                      <hr />
+                    </li>
+                    <li>
+                      <a data-for="refresh"
+                         title="ブラウザ内に蓄積されたフォロー新着を全消去してサーバーから再取得します。ユーザーをフォローまたはフォロー解除した時に必要です。">
+                        フォロー新着全体を再取得
+                      </a>
+                      <hr />
+                    </li>
+                    <li>
+                      <a data-for="sign-out">
+                        ログアウト
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- The real page body -->
+      <div class="cell auto nicofeed-feed">
+
+        <!-- Activities -->
+        <div class="grid-container">
+          <div class="grid-y">
+
+            <div class="nicofeed-activities"></div>
+            <div class="cell card hide nicofeed-end-of-feed">
+              <div class="card-section">
+                これより前のフォロー新着はありません。
+              </div>
+            </div>
+
+            <template data-for="activity">
+              <!-- This element will have the following attributes
+                   assigned by FeedView:
+
+                   * id="nicofeed.activity.{ActivityID}"
+                   * data-id="{ActivityID}"
+                   * class="nicofeed-activity-{Activity}"
+              -->
+              <div class="cell card">
+                <div class="card-section">
+                  <!-- An activity has a header and a body. -->
+                  <div class="grid-y">
+                    <!-- An activity header has a user icon, their name,
+                         and a muting menu. -->
+                    <div class="cell grid-x">
+                      <div class="cell auto nicofeed-user">
+                        <a class="nicofeed-user-anchor" target="_blank">
+                          <img class="nicofeed-user-icon" />
+                          <span class="nicofeed-user-name"></span>
+                        </a>
+                      </div>
+                      <div class="cell shrink">
+                        <ul class="menu nicofeed-muting" data-alignment="right">
+                          <li class="is-dropdown-submenu-parent">
+                            <a>
+                              <i class="fi fi-list"></i>
+                            </a>
+                            <ul class="menu">
+                              <li>
+                                <a data-for="create-filter">フィルタリングルールを作成...</a>
+                              </li>
+                            </ul>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <!-- An activity body has a message, timestamp,
+                         thumbnail, an object type, and a content
+                         title. -->
+                    <div class="cell grid-y nicofeed-activity-body">
+                      <!-- Message and timestamp -->
+                      <div class="cell grid-x">
+                        <div class="cell auto nicofeed-activity-message"></div>
+                        <div class="cell shrink nicofeed-activity-timestamp"></div>
+                      </div>
+                      <!-- Thumbnail and title. These may be missing
+                           depending on the activity type. -->
+                      <a class="nicofeed-content-anchor" target="_blank">
+                        <div class="cell grid-x nicofeed-content">
+                          <!-- Thumbnail -->
+                          <div class="cell shrink nicofeed-content-thumb">
+                            <img class="nicofeed-content-thumb" />
+                          </div>
+                          <!-- Content details -->
+                          <div class="cell auto grid-y nicofeed-content-details">
+                            <!-- Content type -->
+                            <div class="cell">
+                              <span class="nicofeed-content-type"></span>
+                            </div>
+                            <!-- Content title -->
+                            <div class="cell">
+                              <span class="nicofeed-content-title"></span>
+                            </div>
+                          </div>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </template>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </body>
+</html>

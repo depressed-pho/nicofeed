@@ -1,0 +1,54 @@
+@import '../pages.scss';
+
+#nicofeed-edit-filter-set {
+    height: 90vh;
+
+    & > .grid-y, .nicofeed-table-container {
+        height: 100%;
+    }
+
+    .vertical.menu {
+        li {
+            margin-bottom: 3px;
+            button {
+                width: 100%;
+            }
+        }
+    }
+
+    table.nicofeed-rule-list {
+        /* Anchors */
+        @include nicofeed-default-anchor;
+
+        /* Columns */
+        .nicofeed-num-fired {
+            width: 5em;
+        }
+        .nicofeed-last-fired {
+            width: 13em;
+        }
+
+        /* Hover */
+        tbody tr {
+            &:hover {
+                background-color: $table-row-hover;
+            }
+        }
+
+        /* Selected row */
+        $selected-color: scale-color(get-color(primary), $lightness: 70%);
+        $selected-hover: darken($selected-color, $table-hover-scale);
+        .nicofeed-selected {
+            background-color: $selected-color;
+
+            &:hover {
+                background-color: $selected-hover;
+            }
+        }
+    }
+
+    .nicofeed-any {
+        color: hsl(0, 60%, 46%);
+        font-weight: bold;
+    }
+}

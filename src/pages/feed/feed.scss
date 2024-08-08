@@ -1,0 +1,115 @@
+@import '../pages.scss';
+
+$user-icon-width: 56px;
+$user-icon-height: 56px;
+
+$content-thumb-width: 256px;
+$content-thumb-height: 144px;
+
+@mixin nicofeed-aspect-ratio-retaining-img {
+    object-fit: contain;
+    object-position: center;
+    background-color: gray;
+    border-radius: 4px;
+}
+
+.nicofeed-loading-progress {
+    width: 5rem;
+
+    /* Center it vertically */
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.nicofeed-transparent {
+    opacity: 0;
+}
+.nicofeed-fast-fade-in {
+    opacity: 1;
+    transition: opacity 100ms;
+}
+.nicofeed-fast-fade-out {
+    opacity: 0;
+    transition: opacity 100ms;
+}
+
+.nicofeed-feed {
+    padding-top: 1rem;
+    overflow-y: auto;
+    @include nicofeed-default-anchor($text-decoration: none);
+}
+
+/* TODO: These should be customizable, i.e. these styles should be
+   dynamically generated and applied. */
+.card {
+    @function nicofeed-activity-bg-color($hue, $saturation: 20%, $lightness: 95%) {
+        @return hsl($hue, $saturation, $lightness);
+    }
+
+    @function nicofeed-activity-fg-color($hue, $saturation: 60%, $lightness: 50%) {
+        @return hsl($hue, $saturation, $lightness);
+    }
+
+    &.nicofeed-activity-advertise {
+        background-color: nicofeed-activity-bg-color(158);
+    }
+    &.nicofeed-activity-schedule {
+        background-color: nicofeed-activity-bg-color(25);
+        .nicofeed-activity-message {
+            color: nicofeed-activity-fg-color(25);
+        }
+    }
+    &.nicofeed-activity-start {
+        background-color: nicofeed-activity-bg-color(190, $lightness: 91%);
+        .nicofeed-activity-message {
+            color: nicofeed-activity-fg-color(190, $lightness: 46%);
+            font-weight: bold;
+        }
+    }
+    &.nicofeed-activity-like {
+        background-color: nicofeed-activity-bg-color(102);
+    }
+    &.nicofeed-activity-list {
+        background-color: nicofeed-activity-bg-color(64);
+    }
+    &.nicofeed-activity-upload {
+        background-color: nicofeed-activity-bg-color(0, $saturation: 80%);
+        .nicofeed-activity-message {
+            color: nicofeed-activity-fg-color(0, $lightness: 46%);
+            font-weight: bold;
+        }
+    }
+}
+
+.nicofeed-user-icon {
+    width: $user-icon-width;
+    height: $user-icon-height;
+    @include nicofeed-aspect-ratio-retaining-img;
+}
+
+.nicofeed-activity-body {
+    padding-left: calc(#{$user-icon-width} + 0.4em);
+}
+
+.nicofeed-activity-message {
+    font-size: 85%;
+}
+
+.nicofeed-content-thumb {
+    width: $content-thumb-width;
+    height: $content-thumb-height;
+    @include nicofeed-aspect-ratio-retaining-img;
+}
+
+.nicofeed-content-details {
+    margin-left: 0.9em;
+}
+
+.nicofeed-content-type {
+    color: white;
+    background-color: black;
+    padding: 4px 12px;
+    border-radius: 2px;
+    font-size: 80%;
+}

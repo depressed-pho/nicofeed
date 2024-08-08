@@ -1,0 +1,28 @@
+@import '../pages.scss';
+
+#nicofeed-create-filter {
+    select {
+        /* Cancel the Foundation default "width: 100%". */
+        width: auto;
+    }
+
+    /* NOTE: We really want to do this but it doesn't work, because the
+     * style of <option> is OS-provided. And we can't bother rolling
+     * up our own control. See
+     * https://stackoverflow.com/questions/7208786/how-to-style-the-option-of-an-html-select-element
+     */
+    /*
+    option[value="any"] {
+        color: hsl(0, 60, 46);
+        font-weight: bold;
+    }
+   */
+
+    @include nicofeed-default-anchor;
+
+    .menu.align-right {
+        li {
+            margin-left: 3px;
+        }
+    }
+}

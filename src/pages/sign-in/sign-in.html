@@ -1,0 +1,45 @@
+<!-- -*- nxml -*-
+     The modal window for signing in. Initially invisible.
+-->
+<div class="reveal" id="nicofeed-sign-in"
+     data-close-on-click="false"
+     data-close-on-esc="false"
+     data-animation-in="fade-in"
+     data-animation-out="fade-out">
+  <h1>ログイン</h1>
+  <p>
+    フォロー新着データを取得するため、ニコニコのログイン ID とパスワードが必要です。
+  </p>
+  <p>
+    注意: 本アドオンは言うまでもなくニコニコ公式のものではなく、パスワードの入力は一般論として危険な行為です。
+    入力の前に本アドオンの開発者が信用に値するかどうかを慎重に検討して下さい。またもし可能ならば
+    <a href="https://github.com/depressed-pho/nicofeed">ソースコード</a>をお読みになり、
+    悪意ある動作をしないことを確認して下さい。
+  </p>
+  <form>
+    <div class="grid-container">
+      <div class="grid-y">
+        <div class="cell">
+          <label>
+            メールアドレス (または電話番号):
+            <input type="text" required="required" />
+          </label>
+        </div>
+        <div class="cell">
+          <label>
+            パスワード:
+            <input type="password" required="required" />
+          </label>
+        </div>
+        <div class="cell nicofeed-error"></div>
+        <div class="cell">
+          <ul class="menu align-right">
+            <li>
+              <button type="submit" class="button float-right">ログイン</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

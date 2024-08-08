@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "moduleResolution": "Node",
+        "noImplicitAny": true,
+        "sourceMap": true,
+        "strict": true,
+        "allowSyntheticDefaultImports": true,
+        "target": "ES2017",
+        "lib": ["ES2017","dom", "dom.iterable"],
+        "typeRoots": ["node_modules/@types"],
+        "experimentalDecorators": true,
+        "alwaysStrict": true,
+        "baseUrl": ".",
+        "paths": {
+            "*": ["decl/*"],
+            "niconico/*": ["lib/*"]
+        }
+    }
+}

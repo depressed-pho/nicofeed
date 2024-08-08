@@ -1,0 +1,107 @@
+<!-- -*- nxml -*-
+     The modal window for editing the set of filtering
+     rules. Initially invisible.
+-->
+<div class="large reveal" id="nicofeed-edit-filter-set"
+     data-close-on-click="false"
+     data-close-on-esc="true"
+     data-animation-in="fade-in"
+     data-animation-out="fade-out">
+  <button class="close-button" data-close="" aria-label="Close modal" type="button">
+    <span aria-hidden="true" title="編集が完了したらこのボタンで閉じて下さい">&times;</span>
+  </button>
+
+  <!-- Split the window vertically, for the header and the body. -->
+  <div class="grid-y">
+    <div class="cell shrink">
+      <h1>フィルタリングルールの編集</h1>
+    </div>
+    <!-- Split the space horizontally into two parts. -->
+    <div class="cell auto grid-x grid-margin-x">
+      <!-- The left side is a list of rules. -->
+      <div class="cell auto nicofeed-table-container">
+        <table class="unstriped nicofeed-rule-list nicofeed-scrollable nicofeed-selectable">
+          <thead>
+            <th class="nicofeed-rule">ルール</th>
+            <th class="nicofeed-num-fired">累積適用回数</th>
+            <th class="nicofeed-last-fired">最終適用日時</th>
+          </thead>
+          <tbody />
+        </table>
+        <template data-for="row">
+          <!-- If this is a selected row, the <tr> element should have
+               .nicofeed-selected -->
+          <tr data-id="">
+            <td class="nicofeed-rule">
+              <span data-for="actor">
+                <template data-for="user">
+                  <a class="nicofeed-user" target="_blank"><img class="nicofeed-user-icon" />
+                  <span class="nicofeed-user-name"></span></a>
+                </template>
+                <template data-for="any">
+                  <span class="nicofeed-any">すべてのユーザー</span>
+                </template>
+              </span>
+              による
+              <span data-for="type">
+                <template data-for="video">動画</template>
+                <template data-for="stream">放送</template>
+                <template data-for="image">静画</template>
+                <template data-for="comic">漫画</template>
+                <template data-for="article">ブログ記事</template>
+                <template data-for="model">3D モデル</template>
+                <template data-for="game">ゲーム</template>
+                <template data-for="any">
+                  <span class="nicofeed-any">あらゆるコンテンツ</span>
+                </template>
+              </span>
+              の
+              <span data-for="kind">
+                <template data-for="advertise">広告</template>
+                <template data-for="schedule">予約</template>
+                <template data-for="start">開始</template>
+                <template data-for="get-magic-number">キリ番到達</template>
+                <template data-for="like">いいね</template>
+                <template data-for="list">マイリス追加</template>
+                <template data-for="upload">投稿</template>
+                <template data-for="any">
+                  <span class="nicofeed-any">あらゆる活動</span>
+                </template>
+              </span>
+              を
+              <span data-for="action">
+                <template data-for="show">表示する</template>
+                <template data-for="hide">非表示にする</template>
+              </span>
+            </td>
+            <td class="nicofeed-num-fired"></td>
+            <td class="nicofeed-last-fired"></td>
+          </tr>
+        </template>
+      </div>
+      <!-- The right side is a set of controls. -->
+      <div class="cell shrink">
+        <ul class="vertical menu">
+          <li>
+            <button type="button" class="button" data-for="raise-priority">
+              <i class="fi fi-arrow-up"></i>
+              <span>優先順位を上げる</span>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="button" data-for="lower-priority">
+              <i class="fi fi-arrow-down"></i>
+              <span>優先順位を下げる</span>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="button warning" data-for="delete">
+              <i class="fi fi-trash"></i>
+              <span>このルールを削除する</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

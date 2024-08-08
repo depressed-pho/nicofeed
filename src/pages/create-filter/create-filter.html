@@ -1,0 +1,59 @@
+<!-- -*- nxml -*-
+     The modal window for creating a filter from an activity. Initially invisible.
+-->
+<div class="reveal" id="nicofeed-create-filter"
+     data-close-on-click="false"
+     data-close-on-esc="true"
+     data-animation-in="fade-in"
+     data-animation-out="fade-out">
+  <h1>フィルタリングルールの追加</h1>
+  <form>
+    <div class="grid-container">
+      <div class="grid-y">
+        <div class="cell">
+          <select name="actor">
+            <option value="user"></option>
+            <option value="any">すべてのユーザー</option>
+          </select>
+          による
+          <select name="type">
+            <option value="video">動画</option>
+            <option value="stream">放送</option>
+            <option value="image">静画</option>
+            <option value="comic">漫画</option>
+            <option value="article">ブログ記事</option>
+            <option value="model">3D モデル</option>
+            <option value="game">ゲーム</option>
+            <option value="any">あらゆるコンテンツ</option>
+          </select>
+          の
+          <select name="kind">
+            <option value="advertise">広告</option>
+            <option value="schedule">予約</option>
+            <option value="start">開始</option>
+            <option value="get-magic-number">キリ番到達</option>
+            <option value="like">いいね</option>
+            <option value="list">マイリス追加</option>
+            <option value="upload">投稿</option>
+            <option value="any">あらゆる活動</option>
+          </select>
+          を
+          <select name="action">
+            <option value="show">表示する</option>
+            <option value="hide">非表示にする</option>
+          </select>
+        </div>
+        <div class="cell">
+          <ul class="menu align-right">
+            <li>
+              <button type="button" class="button secondary">取消</button>
+            </li>
+            <li>
+              <button type="submit" class="button">追加</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

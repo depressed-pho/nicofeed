@@ -1,0 +1,41 @@
+@import "../pages.scss";
+
+body > form {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* The "Center Anything" technique shown in
+ * https://www.w3schools.com/howto/howto_css_center-vertical.asp
+ *
+ * But I still don't know why this works.
+ */
+.nicofeed-vertical-center-container {
+    position: relative;
+
+    .nicofeed-vertical-center {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
+
+#polling-interval-help-text {
+    margin-top: -0.3rem;
+}
+
+.nicofeed-toggle-fieldset-visibility {
+    cursor: pointer;
+    color: inherit;
+    text-decoration: none;
+    i {
+        font-size: 120%;
+    }
+}
+fieldset.nicofeed-hidden-fieldset {
+    padding-top: 1rem;
+    padding-bottom: 0;
+    & > *:not(legend) {
+        display: none;
+    }
+}

@@ -1,0 +1,6 @@
+/* Tables whose tbody elements are selectable. */
+table.nicofeed-selectable {
+    td {
+        cursor: cell;
+    }
+}
