@@ -5,8 +5,6 @@
 async function navbarIconClicked() {
     const perms = {
         origins: [
-            "https://account.nicovideo.jp/*",
-            "https://www.nicovideo.jp/*",
             "https://api.feed.nicovideo.jp/*",
         ]
     };

@@ -21,11 +21,6 @@ module.exports = {
     ],
     // These has to be synchronised with src/background.ts.
     host_permissions: [
-        // To perform an authentication and also follow a redirection
-        // on a failed authentication.
-        "https://account.nicovideo.jp/*",
-        // To follow a redirection on a successful authentication.
-        "https://www.nicovideo.jp/*",
         // To access the feed API.
         "https://api.feed.nicovideo.jp/*"
     ],

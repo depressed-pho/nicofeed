@@ -23,7 +23,6 @@ export class FeedView {
     public readonly refreshRequested: Bacon.EventStream<null>;
     public readonly editFilterSetRequested: Bacon.EventStream<null>;
     public readonly editPrefsRequested: Bacon.EventStream<null>;
-    public readonly signOutRequested: Bacon.EventStream<null>;
     private readonly filterCreationRequestedBus: Bacon.Bus<Activity>;
     public get filterCreationRequested(): Bacon.EventStream<Activity> {
         return this.filterCreationRequestedBus;
@@ -62,8 +61,6 @@ export class FeedView {
         this.editPrefsRequested = Bacon.fromEvent(miEditPrefs, "click").map(Bacon.constant(null));
         const miRefresh       = menuCtrl.querySelector<HTMLAnchorElement>("a[data-for='refresh']")!;
         this.refreshRequested = Bacon.fromEvent(miRefresh, "click").map(Bacon.constant(null));
-        const miSignOut       = menuCtrl.querySelector<HTMLAnchorElement>("a[data-for='sign-out']")!;
-        this.signOutRequested = Bacon.fromEvent(miSignOut, "click").map(Bacon.constant(null));
 
         this.filterCreationRequestedBus = new Bacon.Bus<Activity>();
 

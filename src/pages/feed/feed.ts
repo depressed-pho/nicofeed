@@ -1,7 +1,6 @@
 import 'foundation-sites';
 import * as $ from 'jquery';
 import './feed.scss';
-import { signOut } from 'niconico/auth';
 import { FilterRuleSet } from 'niconico/feed/filter';
 import { ConfigModel } from '../config/config-model';
 import { ResetInsertionPointEvent, InsertActivityEvent, DeleteActivityEvent,
@@ -29,10 +28,6 @@ window.addEventListener("DOMContentLoaded", async () => {
     feedView.updateRequested.onValue(() => feedModel.checkForUpdates());
     feedView.editPrefsRequested.onValue(async () => await browser.runtime.openOptionsPage());
     feedView.refreshRequested.onValue(async () => await feedModel.refresh());
-    feedView.signOutRequested.onValue(async () => {
-        await signOut();
-        await feedModel.refresh();
-    });
     feedView.filterCreationRequested.onValue(async activity => {
         const ruleDesc = await createFilter(activity);
         if (ruleDesc) {

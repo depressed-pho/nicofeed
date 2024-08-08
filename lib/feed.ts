@@ -84,9 +84,11 @@ export async function getFeedChunk(cursor?: ActivityID): Promise<FeedChunk> {
             ...(json.nextCursor ? {nextCursor: json.nextCursor} : {}),
         };
     }
-    else {
-        // FIXME
+    else if (res.status === 401) {
         throw new UnauthorizedError();
+    }
+    else {
+        throw new Error(`Failed to fetch a feed chunk: ${res.status}`);
     }
 }
 
