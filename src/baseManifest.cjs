@@ -9,6 +9,7 @@ module.exports = {
         scripts: ["background.js"]
     },
     action: {
+        "default_area": "navbar",
         "default_icon": "assets/icon.svg",
         "default_title": "Nicofeed"
     },

@@ -26,6 +26,4 @@ async function navbarIconClicked() {
         });
     }
 }
-browser.runtime.onInstalled.addListener(() => {
-    browser.action.onClicked.addListener(navbarIconClicked);
-});
+browser.action.onClicked.addListener(navbarIconClicked);
