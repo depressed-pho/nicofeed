@@ -42,10 +42,13 @@ export class FilterRule implements IFilterRule {
         this.priority = priority;
         this.numFired = 0;
 
-        this.action   = rule.action;
-        this.actor    = rule.actor;
-        this.kind     = rule.kind;
-        this.type     = rule.type;
+        this.action = rule.action;
+        if (rule.actor)
+            this.actor = rule.actor;
+        if (rule.kind)
+            this.kind  = rule.kind;
+        if (rule.type)
+            this.type  = rule.type;
     }
 
     /** Apply the filtering rule to the given activity. Return null when
@@ -157,7 +160,7 @@ export class FilterRuleSet extends Dexie {
         return await this.transaction("rw?", this.rules, async () => {
             /* First we need to find out which priority to use. */
             const arr = await this.rules.orderBy("priority").reverse().limit(1).toArray();
-            const pri = arr.length ? arr[0].priority+1 : 0;
+            const pri = arr.length ? arr[0]!.priority + 1 : 0;
 
             /* Now we can construct a proper FilterRule object. */
             const obj = new FilterRule(rule, pri);

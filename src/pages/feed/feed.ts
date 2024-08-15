@@ -4,8 +4,8 @@ import './feed.scss';
 import { FilterRuleSet } from 'niconico/feed/filter';
 import { ConfigModel } from '../config/config-model';
 import { ResetInsertionPointEvent, InsertActivityEvent, DeleteActivityEvent,
-         ShowEndOfFeedEvent, ClearFeedEvent, SetChasingTail,
-         UpdateProgressEvent, SetUpdatingAllowed, FeedModel
+         ShowEndOfFeedEvent, ClearFeedEvent, UpdateProgressEvent,
+         SetUpdatingAllowed, FeedModel
        } from './feed-model';
 import { FeedView } from './feed-view';
 import { createFilter } from '../create-filter/create-filter';
@@ -44,6 +44,8 @@ window.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
+    let shouldScroll = true;
+
     /* It is our responsible to interpret feed events coming from the
      * model. */
     feedModel.feedEvents.onValue(ev => {
@@ -53,20 +55,33 @@ window.addEventListener("DOMContentLoaded", async () => {
         else if (ev instanceof InsertActivityEvent) {
             feedView.insertActivity(ev.activity);
 
-            // FIXME
-            const lastVis = configModel.getLastVisibleActivity();
-            if (lastVis && ev.activity.id == lastVis) {
-                feedView.scrollTo(lastVis);
+            // Auto-scrolling should happen after the feed is cleared until
+            // the first activity whose timestamp <= lastVis is inserted.
+            // When lastVis is null it means this is the first time we got
+            // the feed. In that case auto-scrolling should never happen.
+            if (shouldScroll) {
+                const lastVis = feedModel.getLastVisibleTimestamp();
+                if (lastVis) {
+                    if (ev.activity.timestamp >= lastVis) {
+                        feedView.scrollTo(ev.activity.id);
+                    }
+                    if (ev.activity.timestamp <= lastVis) {
+                        shouldScroll = false;
+                    }
+                }
+                else {
+                    shouldScroll = false;
+                }
             }
         }
         else if (ev instanceof DeleteActivityEvent) {
             feedView.deleteActivity(ev.id);
         }
         else if (ev instanceof ClearFeedEvent) {
+            // shouldScroll must be set before clearFeed() is called, to
+            // prevent an unintended scroll event from making it through.
+            shouldScroll = true;
             feedView.clearFeed();
-        }
-        else if (ev instanceof SetChasingTail) {
-            // FIXME
         }
         else if (ev instanceof ShowEndOfFeedEvent) {
             feedView.showEndOfFeed();
@@ -82,8 +97,11 @@ window.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-    // FIXME
-    feedView.lastVisibleActivityChanged.onValue(id => {
-        configModel.setLastVisibleActivity(id);
+    // The change in the cursor position should only be recorded when
+    // auto-scrolling is disabled.
+    feedView.lastVisibleTimestampChanged.onValue(timestamp => {
+        if (!shouldScroll) {
+            feedModel.setLastVisibleTimestamp(timestamp);
+        }
     });
 });

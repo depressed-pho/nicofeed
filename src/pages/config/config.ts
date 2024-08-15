@@ -12,5 +12,5 @@ window.addEventListener("DOMContentLoaded", async () => {
     $(document).foundation();
 
     const configModel = new ConfigModel();
-    const configView  = new ConfigView(configModel);
+    new ConfigView(configModel);
 });

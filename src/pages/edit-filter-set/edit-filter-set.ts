@@ -124,7 +124,7 @@ class EditFilterSetView {
     private async ruleAt(index: number): Promise<FilterRule> {
         const rules = await this.filterRules!.toArray();
         if (index >= 0 && index < rules.length) {
-            return rules[index];
+            return rules[index]!;
         }
         else {
             throw new Error(`Index out of bounds: ${index}`);
@@ -158,7 +158,7 @@ class EditFilterSetView {
             const row = this.tmplRow.content.cloneNode(true) as DocumentFragment;
 
             const tr = row.querySelector<HTMLTableRowElement>("tr")!;
-            tr.dataset.id = rule.id; // highlight() uses this.
+            tr.dataset["id"] = rule.id; // highlight() uses this.
             tr.addEventListener("click", () => {
                 // Select it when clicked.
                 this.selectedRuleBus.push(rule.id);
@@ -224,7 +224,7 @@ class EditFilterSetView {
 
     private highlight(ruleID: FilterRuleID|null) {
         for (const tr of this.tbody.querySelectorAll("tr")) {
-            if (tr.dataset.id && ruleID && tr.dataset.id == ruleID) {
+            if (tr.dataset["id"] && ruleID && tr.dataset["id"] == ruleID) {
                 tr.classList.add("nicofeed-selected");
             }
             else {
@@ -253,11 +253,11 @@ class EditFilterSetView {
         let trA: Element|undefined;
         let trB: Element|undefined;
         for (const tr of this.tbody.querySelectorAll("tr")) {
-            if (tr.dataset.id) {
-                if (tr.dataset.id == idA) {
+            if (tr.dataset["id"]) {
+                if (tr.dataset["id"] == idA) {
                     trA = tr;
                 }
-                else if (tr.dataset.id == idB) {
+                else if (tr.dataset["id"] == idB) {
                     trB = tr;
                 }
             }

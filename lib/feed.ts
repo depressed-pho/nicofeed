@@ -49,11 +49,11 @@ export interface UnknownActor {
 export function renderContentType(type: ContentType): string {
     switch (type) {
         case "video":   return "動画";
-        case "stream":  return "放送";
+        case "stream":  return "生放送";
         case "image":   return "静画";
-        case "comic":   return "漫画";
+        case "comic":   return "マンガ";
         case "article": return "ブログ記事";
-        case "model":   return "3D モデル";
+        case "model":   return "立体";
         case "game":    return "ゲーム";
         default:
             return "(不明)";
@@ -129,6 +129,7 @@ function parseActivityKind(kind: string): ActivityKind {
         case "nicovideo.user.mylist.add.video":
             return "list";
 
+        case "nicoseiga.user.episode.upload":
         case "nicoseiga.user.illust.upload":
         case "nicovideo.user.video.upload":
             return "upload";
@@ -161,7 +162,7 @@ function parseContentType(type: string): ContentType {
         case "illust":
             return "image";
 
-        case "comic":
+        case "comicEpisode":
             return "comic";
 
         default:

@@ -1,9 +1,10 @@
 import * as Bacon from 'baconjs';
 import { UnauthorizedError } from 'niconico/errors';
+import { CursorDatabase } from 'niconico/cursor-db';
 import { ActivityID, FeedChunk, Activity, getFeedChunk } from 'niconico/feed';
+import { FeedDatabase } from 'niconico/feed/db';
 import { FilterAction, FilterRuleSet } from 'niconico/feed/filter';
 import { ConfigModel } from '../config/config-model';
-import { FeedDatabase } from './feed-db';
 
 const DEBUG_FETCH_ONLY_THE_FIRST_CHUNK = true;
 
@@ -39,13 +40,6 @@ export class ClearFeedEvent extends FeedEvent {
     public constructor() { super() }
 }
 
-/** Start of stop chasing the last activity, prohibiting or allowing to
- * update the last visible activity.
- */
-export class SetChasingTail extends FeedEvent {
-    public constructor(public readonly enabled: boolean) { super() }
-}
-
 /** Show the progress bar with given progress [0, 1), or hide when 1.
  */
 export class UpdateProgressEvent extends FeedEvent {
@@ -61,7 +55,8 @@ export class SetUpdatingAllowed extends FeedEvent {
 export class FeedModel {
     private readonly config: ConfigModel;
     private readonly filterRules: FilterRuleSet;
-    private readonly database: FeedDatabase;
+    private readonly feedDB: FeedDatabase;
+    private readonly cursorDB: CursorDatabase;
 
     /** Events telling the FeedView to what to do about the feed.
      */
@@ -79,7 +74,7 @@ export class FeedModel {
     /** A function to unplug the currently active activity source. Called
      * on refresh.
      */
-    private unplugActivitySource?: () => void;
+    private unplugActivitySource: (() => void)|undefined;
 
     public constructor(config: ConfigModel,
                        filterRules: FilterRuleSet,
@@ -87,7 +82,8 @@ export class FeedModel {
         this.config          = config;
         this.filterRules     = filterRules;
         this.authenticate    = authenticate;
-        this.database        = new FeedDatabase();
+        this.feedDB          = new FeedDatabase();
+        this.cursorDB        = new CursorDatabase();
         this.feedEventBus    = new Bacon.Bus<FeedEvent>();
         this.feedEvents      = this.feedEventBus.toEventStream();
         this.updateRequested = new Bacon.Bus<null>();
@@ -156,21 +152,14 @@ export class FeedModel {
      * is either 1 month ago from now, or some configured time ago from the
      * last visible entry, whichever is earlier.
      */
-    private async expirationDate(): Promise<Date> {
-        const expireAt = this.standardExpirationDate();
+    private async expirationDate(): Promise<Date|null> {
+        const std    = this.standardExpirationDate();
+        const cursor = await this.cursorDB.cutOff(this.config.getTTL());
 
-        const lastVis = this.config.getLastVisibleActivity();
-        if (lastVis) {
-            const entry = await this.database.lookup(lastVis);
-            if (entry) {
-                const TTL = this.config.getTTL();
-                const d   = new Date(entry.timestamp.getTime());
-                d.setTime(d.getTime() - TTL * 1000);
-                return d.getTime() < expireAt.getTime() ? d : expireAt;
-            }
-        }
-
-        return expireAt;
+        if (cursor)
+            return std.getTime() < cursor.getTime() ? std : cursor;
+        else
+            return null;
     }
 
     /** Create a stream of FeedEvent reading all the activities in the
@@ -180,25 +169,30 @@ export class FeedModel {
         return Bacon.fromBinder(sink => {
             let   abort   = false;
             const promise = (async () => {
-                sink(new Bacon.Next(new SetChasingTail(true)));
                 sink(new Bacon.Next(new SetUpdatingAllowed(false)));
                 sink(new Bacon.Next(new UpdateProgressEvent(0)));
                 /* Purge old activities before reading anything. We don't
                  * have to mess with DeleteEntryEvent because no entries
                  * are displayed at this point. */
-                await this.database.tx("rw", async () => {
-                    const expireAt = await this.expirationDate();
-                    await this.database.purge(expireAt);
-                });
+                const expireAt = await this.expirationDate();
+                if (expireAt) {
+                    await this.feedDB.tx("rw", async () => {
+                        await this.feedDB.purge(expireAt);
+                    });
+                }
                 /* Note that we can't do it in a big transaction
                  * because we have to touch two databases at the same
                  * time. */
-                const activities = await this.database.toArray();
+                const activities = await this.feedDB.toArray();
                 const total      = activities.length;
                 let   count      = 0;
                 let   nFiltered  = 0;
                 console.info("Loading %d activities from the database...", total);
                 for (const activity of activities) {
+                    if (abort) {
+                        console.debug("Got an abort request. Exiting...");
+                        break;
+                    }
                     count++;
                     if (await this.filterRules.apply(activity) === FilterAction.Show) {
                         sink(new Bacon.Next(new InsertActivityEvent(activity)));
@@ -227,7 +221,6 @@ export class FeedModel {
                 .then(() => {
                     sink(new Bacon.Next(new ResetInsertionPointEvent()));
                     sink(new Bacon.Next(new UpdateProgressEvent(1)));
-                    sink(new Bacon.Next(new SetChasingTail(false)));
                     sink(new Bacon.End());
                 });
             return () => {
@@ -248,19 +241,21 @@ export class FeedModel {
                 sink(new Bacon.Next(new UpdateProgressEvent(0)));
 
                 /* Purge old activities before posting requests. */
-                this.database.tx("rw", async () => {
-                    const expireAt = await this.expirationDate();
-                    await this.database.purge(expireAt, activity => {
-                        sink(new Bacon.Next(new DeleteActivityEvent(activity.id)));
+                const expireAt = await this.expirationDate();
+                if (expireAt) {
+                    this.feedDB.tx("rw", async () => {
+                        await this.feedDB.purge(expireAt, activity => {
+                            sink(new Bacon.Next(new DeleteActivityEvent(activity.id)));
+                        });
                     });
-                });
+                }
 
                 /* Some work for displaying the progress bar. This doesn't
                  * need to be in a transaction because it's only
                  * informational. */
                 const started    : number = Date.now();
                 const expectedEnd: number = await (async () => {
-                    const newest = await this.database.newest();
+                    const newest = await this.feedDB.newest();
                     if (newest) {
                         console.debug(
                             "The timestamp of the newest activity in the database is ", newest.timestamp);
@@ -296,7 +291,7 @@ export class FeedModel {
                         "Got a chunk containing %i activities.", chunk.activities.length);
 
                     for (const activity of chunk.activities) {
-                        if (await this.database.exists(activity.id)) {
+                        if (await this.feedDB.exists(activity.id)) {
                             console.debug(
                                 "Found an activity which was already in our database: %s", activity.id);
                             console.debug(
@@ -349,8 +344,8 @@ export class FeedModel {
                 if (nFiltered > 0) {
                     console.log("Filtered out %d activities from the server.", nFiltered);
                 }
-                await this.database.tx("rw", async () => {
-                    await this.database.bulkPut(newActivities);
+                await this.feedDB.tx("rw", async () => {
+                    await this.feedDB.bulkPut(newActivities);
                 });
             })();
             promise
@@ -385,6 +380,7 @@ export class FeedModel {
                     continue;
                 }
                 else {
+                    // FIXME
                     throw e;
                 }
             }
@@ -407,12 +403,12 @@ export class FeedModel {
          * through the bus. */
         if (this.unplugActivitySource) {
             this.unplugActivitySource();
-            delete this.unplugActivitySource;
+            this.unplugActivitySource = undefined;
         }
 
         if (clearDatabase) {
             // Clear the database.
-            await this.database.clear();
+            await this.feedDB.clear();
         }
 
         // Tell the feed view to clear the entire feed.
@@ -422,5 +418,15 @@ export class FeedModel {
         // clear it).
         this.unplugActivitySource =
             this.feedEventBus.plug(this.spawnActivitySource());
+    }
+
+    public getLastVisibleTimestamp(): Date|undefined {
+        return this.config.getLastVisibleTimestamp();
+    }
+
+    public setLastVisibleTimestamp(timestamp: Date|undefined) {
+        this.config.setLastVisibleTimestamp(timestamp);
+        if (timestamp)
+            this.cursorDB.put(timestamp);
     }
 }

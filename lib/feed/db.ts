@@ -1,4 +1,4 @@
-import { TransactionMode, Dexie } from 'dexie';
+import { type TransactionMode, Dexie } from 'dexie';
 import { ActivityID, Activity } from 'niconico/feed';
 
 export class FeedDatabase extends Dexie {
@@ -46,12 +46,11 @@ export class FeedDatabase extends Dexie {
         return await this.feed.count();
     }
 
-    /** Find the newest activities in the database, or undefined if there
-     * are none.
+    /** Find the newest activity in the database, or undefined if there is
+     * none.
      */
     public async newest(): Promise<Activity|undefined> {
-        const res = await this.feed.orderBy("timestamp").reverse().limit(1).toArray();
-        return res.length ? res[0] : undefined;
+        return await this.feed.orderBy("timestamp").last();
     }
 
     /** Lookup an activity with the given ID in the database, or null if no

@@ -63,7 +63,7 @@ export class ConfigView {
             .onValue(x => {
                 this.valPollingInterval.textContent =
                     x == null
-                    ? this.valPollingInterval.dataset.disabledLabel!
+                    ? this.valPollingInterval.dataset["disabledLabel"]!
                     : abbreviateDuration(x);
             });
         Bacon.fromEvent(this.slidPollingInterval, "change")
@@ -168,6 +168,7 @@ function toggleFieldsetVisibility(notch: HTMLAnchorElement) {
                 return elem;
             }
         }
+        throw new Error("should be unreachable");
     })();
 
     // Is it shown?
@@ -175,10 +176,10 @@ function toggleFieldsetVisibility(notch: HTMLAnchorElement) {
         // No. Show it.
         fieldset!.classList.remove("nicofeed-hidden-fieldset");
         for (const caret of notch.querySelectorAll("i")) {
-            if (caret.dataset.for == "hidden") {
+            if (caret.dataset["for"] == "hidden") {
                 caret.classList.add("hide");
             }
-            else if (caret.dataset.for == "shown") {
+            else if (caret.dataset["for"] == "shown") {
                 caret.classList.remove("hide");
             }
         }
@@ -187,10 +188,10 @@ function toggleFieldsetVisibility(notch: HTMLAnchorElement) {
         // Yes. Hide it.
         fieldset!.classList.add("nicofeed-hidden-fieldset");
         for (const caret of notch.querySelectorAll("i")) {
-            if (caret.dataset.for == "hidden") {
+            if (caret.dataset["for"] == "hidden") {
                 caret.classList.remove("hide");
             }
-            else if (caret.dataset.for == "shown") {
+            else if (caret.dataset["for"] == "shown") {
                 caret.classList.add("hide");
             }
         }

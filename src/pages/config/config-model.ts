@@ -1,15 +1,14 @@
 import * as Bacon from 'baconjs';
-import { ActivityID } from 'niconico/feed';
 
 // Unit: seconds
-const defaultPollingInterval = 5 * 60;
-const defaultTTL             = 30 * 24 * 60 * 60;
-const defaultFetchDelay      = 1;
+const defaultPollingInterval  = 5 * 60; // 5 min
+const defaultTTL              = 3 * 24 * 60 * 60; // 3 days
+const defaultFetchDelay       = 1;
 
-const keyPollingInterval     = "nicofeed.polling-interval";
-const keyTTL                 = "nicofeed.TTL";
-const keyFetchDelay          = "nicofeed.fetch-delay";
-const keyLastVisibleActivity = "nicofeed.last-visible-activity";
+const keyPollingInterval      = "nicofeed.polling-interval";
+const keyTTL                  = "nicofeed.TTL";
+const keyFetchDelay           = "nicofeed.fetch-delay";
+const keyLastVisibleTimestamp = "nicofeed.last-visible-timestamp";
 
 /** Invariant: there is at most one instance of this class.
  */
@@ -27,6 +26,8 @@ export class ConfigModel {
      */
     private readonly fetchDelayBus: Bacon.Bus<number>;
     public  readonly fetchDelay: Bacon.Property<number>;
+
+    private cachedTimestamp: Date|undefined;
 
     public constructor() {
         this.storage = window.localStorage;
@@ -54,6 +55,8 @@ export class ConfigModel {
                 .toProperty(
                     Number(this.storage.getItem(keyFetchDelay)!));
 
+        this.cachedTimestamp = undefined;
+
         /* The feed page and the "Options page" are separate documents so
          * they don't share the same object of this class. Listen to
          * StorageEvent to notice the changes made remotely. */
@@ -69,7 +72,7 @@ export class ConfigModel {
                     break;
 
                 case keyTTL:
-                case keyLastVisibleActivity:
+                case keyLastVisibleTimestamp:
                     break;
 
                 default:
@@ -97,21 +100,25 @@ export class ConfigModel {
         this.fetchDelayBus.push(delay);
     }
 
-    /* The ID of the activity which was at least partially visible last
-     * time the user scrolled or resized the window. It's null when no
-     * activities were shown at all.
+    /* The timestamp of the activity which was fully visible last time the
+     * user scrolled or resized the window. It's null when no such
+     * activity exists.
      */
-    public getLastVisibleActivity(): ActivityID|null {
-        return this.storage.getItem(keyLastVisibleActivity);
+    public getLastVisibleTimestamp(): Date|undefined {
+        if (!this.cachedTimestamp) {
+            const t = this.storage.getItem(keyLastVisibleTimestamp);
+            if (t != null)
+                this.cachedTimestamp = new Date(String(t));
+        }
+        return this.cachedTimestamp;
     }
 
-    public setLastVisibleActivity(id: ActivityID|null): void {
-        if (id) {
-            this.storage.setItem(keyLastVisibleActivity, id);
-        }
-        else {
-            this.storage.removeItem(keyLastVisibleActivity);
-        }
+    public setLastVisibleTimestamp(t: Date|undefined): void {
+        this.cachedTimestamp = t;
+        if (t)
+            this.storage.setItem(keyLastVisibleTimestamp, t.toISOString());
+        else
+            this.storage.removeItem(keyLastVisibleTimestamp);
     }
 
     /* Reset configurations that have a default value to the default.

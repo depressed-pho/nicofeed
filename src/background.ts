@@ -17,8 +17,8 @@ async function navbarIconClicked() {
         currentWindow: true,
         url: URL
     });
-    if (result.length > 0 && result[0].id != null) {
-        await browser.tabs.update(result[0].id, {active: true});
+    if (result.length > 0 && result[0]!.id != null) {
+        await browser.tabs.update(result[0]!.id, {active: true});
     }
     else {
         await browser.tabs.create({

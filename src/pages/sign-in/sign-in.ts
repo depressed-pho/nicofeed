@@ -2,7 +2,6 @@ import { Reveal } from 'foundation-sites';
 import * as $ from 'jquery';
 import './sign-in.scss';
 import { parseHTML } from 'niconico/parse-html';
-import { UnauthorizedError } from 'niconico/errors';
 import htmlSignIn from './sign-in.html';
 
 class SignInView {
