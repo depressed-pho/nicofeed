@@ -1,4 +1,5 @@
 import * as Bacon from 'baconjs';
+import delay from 'delay';
 import { UnauthorizedError } from 'niconico/errors';
 import { CursorDatabase } from 'niconico/cursor-db';
 import { ActivityID, FeedChunk, Activity, getFeedChunk } from 'niconico/feed';
@@ -6,7 +7,7 @@ import { FeedDatabase } from 'niconico/feed/db';
 import { FilterAction, FilterRuleSet } from 'niconico/feed/filter';
 import { ConfigModel } from '../config/config-model';
 
-const DEBUG_FETCH_ONLY_THE_FIRST_CHUNK = true;
+const DEBUG_FETCH_ONLY_THE_FIRST_CHUNK = false;
 
 export class FeedEvent {}
 
@@ -380,8 +381,11 @@ export class FeedModel {
                     continue;
                 }
                 else {
-                    // FIXME
-                    throw e;
+                    // THINKME: Should this be configurable?
+                    const retryAfter = 10;
+                    console.error(e);
+                    console.info("Retrying after %f seconds...", retryAfter);
+                    await delay(retryAfter * 1000);
                 }
             }
         }

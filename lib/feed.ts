@@ -116,16 +116,21 @@ function parseActivity(json: any): Activity {
 
 function parseActivityKind(kind: string): ActivityKind {
     switch (kind) {
+        case "nicolive.user.program.reserve":
+            return "schedule";
+
         case "nicolive.user.program.onairs":
             return "start";
 
         case "nicovideo.user.video.kiriban.play":
             return "get-magic-number";
 
+        case "niconisolid.user.work.favorite":
         case "nicoseiga.user.comic.favorite":
         case "nicovideo.user.video.first_like":
             return "like";
 
+        case "nicoseiga.user.illust.clip":
         case "nicovideo.user.mylist.add.video":
             return "list";
 
@@ -162,8 +167,12 @@ function parseContentType(type: string): ContentType {
         case "illust":
             return "image";
 
+        case "comic":
         case "comicEpisode":
             return "comic";
+
+        case "solidWork":
+            return "model";
 
         default:
             console.warn("Unknown activity content type:", type);
