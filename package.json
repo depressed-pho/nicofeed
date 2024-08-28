@@ -1,6 +1,6 @@
 {
   "name": "nicofeed",
-  "version": "0.1.0",
+  "version": "0.2",
   "description": "ニコニコの『フォロー新着』を改善する Firefox アドオン",
   "type": "module",
   "scripts": {

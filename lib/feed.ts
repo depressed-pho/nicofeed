@@ -33,8 +33,16 @@ export interface ActivityContent {
     url: string,
 }
 
-export type Actor = User | UnknownActor;
+export type Actor = Channel | User | UnknownActor;
+export type ChannelID = string;
 export type UserID = string;
+export interface Channel {
+    type: "channel",
+    id: ChannelID,
+    name: string,
+    iconUrl: string,
+    url: string,
+}
 export interface User {
     type: "user",
     id: UserID,
@@ -198,6 +206,19 @@ function parseContentType(type: string): ContentType {
 function parseActor(json: any): Actor {
     console.assert(typeof json.type === "string", json);
     switch (json.type) {
+        case "channel":
+            console.assert(typeof json.id      === "string", json);
+            console.assert(typeof json.name    === "string", json);
+            console.assert(typeof json.iconUrl === "string", json);
+            console.assert(typeof json.url     === "string", json);
+            return {
+                type: "channel",
+                id: json.id,
+                name: json.name,
+                iconUrl: json.iconUrl,
+                url: json.url,
+            };
+
         case "user":
             console.assert(typeof json.id      === "string", json);
             console.assert(typeof json.name    === "string", json);

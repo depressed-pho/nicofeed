@@ -57,9 +57,10 @@ export class FilterRule implements IFilterRule {
     public apply(activity: Activity): FilterAction|null {
         if (this.actor && this.actor.type === activity.actor.type) {
             switch (this.actor.type) {
+                case "channel":
                 case "user":
                     // @ts-ignore: TypeScript can't detect that
-                    // activity.actor.type === "user".
+                    // this.actor.id exists.
                     if (this.actor.id != activity.actor.id)
                         return null;
             }

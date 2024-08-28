@@ -174,21 +174,23 @@ class EditFilterSetView {
             spanAction.replaceChildren(); // Remove templates
             spanAction.appendChild(tmplAction.content);
 
-            const spanActor = colRule.querySelector<HTMLSpanElement>("span[data-for='actor']")!;
-            const tmplUser  = spanActor.querySelector<HTMLTemplateElement>("template[data-for='user']")!;
-            const tmplAny   = spanActor.querySelector<HTMLTemplateElement>("template[data-for='any']")!;
+            const spanActor      = colRule.querySelector<HTMLSpanElement>("span[data-for='actor']")!;
+            const tmplIndividual = spanActor.querySelector<HTMLTemplateElement>("template[data-for='individual']")!;
+            const tmplAny        = spanActor.querySelector<HTMLTemplateElement>("template[data-for='any']")!;
             spanActor.replaceChildren(); // Remove templates
-            if (rule.actor && rule.actor.type === "user") {
-                const frag     = tmplUser.content;
+            if (rule.actor &&
+                (rule.actor.type === "channel" || rule.actor.type === "user")) {
 
-                const aUser    = frag.querySelector<HTMLAnchorElement>("a.nicofeed-user")!;
-                aUser.href     = rule.actor.url;
+                const frag     = tmplIndividual.content;
 
-                const imgUser  = frag.querySelector<HTMLImageElement>("img.nicofeed-user-icon")!;
-                imgUser.src    = rule.actor.iconUrl;
+                const aActor   = frag.querySelector<HTMLAnchorElement>("a.nicofeed-actor")!;
+                aActor.href    = rule.actor.url;
 
-                const spanUser = frag.querySelector<HTMLSpanElement>("span.nicofeed-user-name")!;
-                spanUser.textContent = rule.actor.name;
+                const imgIcon  = frag.querySelector<HTMLImageElement>("img.nicofeed-actor-icon")!;
+                imgIcon.src    = rule.actor.iconUrl;
+
+                const spanName = frag.querySelector<HTMLSpanElement>("span.nicofeed-actor-name")!;
+                spanName.textContent = rule.actor.name;
 
                 spanActor.appendChild(frag);
             }

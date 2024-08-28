@@ -1,7 +1,7 @@
 @import '../pages.scss';
 
-$user-icon-width: 56px;
-$user-icon-height: 56px;
+$actor-icon-width: 56px;
+$actor-icon-height: 56px;
 
 $content-thumb-width: 256px;
 $content-thumb-height: 144px;
@@ -38,7 +38,7 @@ $content-thumb-height: 144px;
     padding-top: 1rem;
     overflow-y: auto;
 
-    .nicofeed-user, .nicofeed-activity-body {
+    .nicofeed-actor, .nicofeed-activity-body {
         a {
             color: black;
             text-decoration: none;
@@ -96,14 +96,14 @@ $content-thumb-height: 144px;
     }
 }
 
-.nicofeed-user-icon {
-    width: $user-icon-width;
-    height: $user-icon-height;
+.nicofeed-actor-icon {
+    width: $actor-icon-width;
+    height: $actor-icon-height;
     @include nicofeed-aspect-ratio-retaining-img;
 }
 
 .nicofeed-activity-body {
-    padding-left: calc(#{$user-icon-width} + 0.4em);
+    padding-left: calc(#{$actor-icon-width} + 0.4em);
 }
 
 .nicofeed-activity-message {

@@ -13,7 +13,7 @@ class CreateFilterView {
     private readonly form: HTMLFormElement;
     private readonly selAction: HTMLSelectElement;
     private readonly selActor: HTMLSelectElement;
-    private readonly optUser: HTMLOptionElement;
+    private readonly optIndividual: HTMLOptionElement;
     private readonly selKind: HTMLSelectElement;
     private readonly selType: HTMLSelectElement;
     private readonly btnCancel: HTMLButtonElement;
@@ -29,16 +29,16 @@ class CreateFilterView {
     }
 
     private constructor() {
-        this.frag        = parseHTML(htmlCreateFilter);
-        this.divReveal   = this.frag.querySelector<HTMLDivElement>("div.reveal")!;
-        this.form        = this.frag.querySelector<HTMLFormElement>("form")!;
-        this.selAction   = this.form.querySelector<HTMLSelectElement>("select[name='action']")!;
-        this.selActor    = this.form.querySelector<HTMLSelectElement>("select[name='actor']")!;
-        this.optUser     = this.selActor.querySelector<HTMLOptionElement>("option[value='user']")!;
-        this.selKind     = this.form.querySelector<HTMLSelectElement>("select[name='kind']")!;
-        this.selType     = this.form.querySelector<HTMLSelectElement>("select[name='type']")!;
-        this.btnCancel   = this.form.querySelector<HTMLButtonElement>("button.secondary")!;
-        this.btnSubmit   = this.form.querySelector<HTMLButtonElement>("button[type='submit']")!;
+        this.frag          = parseHTML(htmlCreateFilter);
+        this.divReveal     = this.frag.querySelector<HTMLDivElement>("div.reveal")!;
+        this.form          = this.frag.querySelector<HTMLFormElement>("form")!;
+        this.selAction     = this.form.querySelector<HTMLSelectElement>("select[name='action']")!;
+        this.selActor      = this.form.querySelector<HTMLSelectElement>("select[name='actor']")!;
+        this.optIndividual = this.selActor.querySelector<HTMLOptionElement>("option[value='individual']")!;
+        this.selKind       = this.form.querySelector<HTMLSelectElement>("select[name='kind']")!;
+        this.selType       = this.form.querySelector<HTMLSelectElement>("select[name='type']")!;
+        this.btnCancel     = this.form.querySelector<HTMLButtonElement>("button.secondary")!;
+        this.btnSubmit     = this.form.querySelector<HTMLButtonElement>("button[type='submit']")!;
 
         this.btnCancel.addEventListener("click", () => this.close());
         this.btnSubmit.addEventListener("click", ev => {
@@ -59,10 +59,10 @@ class CreateFilterView {
         this.activity = activity;
         this.onClose  = onClose;
 
-        this.selAction.value = "hide";
-        this.selActor.value  = "user";
-        this.optUser.text    = activity.actor.type === "user" ? activity.actor.name : "";
-        this.selKind.value   = activity.kind === "unknown" ? "any" : activity.kind;
+        this.selAction.value    = "hide";
+        this.selActor.value     = "individual";
+        this.optIndividual.text = activity.actor.type === "unknown" ? "" : activity.actor.name;
+        this.selKind.value      = activity.kind === "unknown" ? "any" : activity.kind;
         if (activity.content)
             this.selType.value = activity.content.type === "unknown" ? "any" : activity.content.type;
         else
@@ -85,7 +85,7 @@ class CreateFilterView {
                 action: this.selAction.value == "show"
                     ? FilterAction.Show : FilterAction.Hide
             };
-            if (this.selActor.value == "user") {
+            if (this.selActor.value == "individual") {
                 rule.actor = this.activity.actor;
             }
             if (this.selKind.value != "any") {

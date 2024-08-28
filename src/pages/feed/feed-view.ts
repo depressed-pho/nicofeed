@@ -134,19 +134,19 @@ export class FeedView {
         toplevel.dataset["timestamp"] = activity.timestamp.toISOString();
         toplevel.classList.add(`nicofeed-activity-${activity.kind}`);
 
-        if (activity.actor.type === "user") {
-            const aUser = frag.querySelector<HTMLAnchorElement>("a.nicofeed-user-anchor")!
-            aUser.href = activity.actor.url;
+        if (activity.actor.type === "user" || activity.actor.type === "channel") {
+            const aActor = frag.querySelector<HTMLAnchorElement>("a.nicofeed-actor-anchor")!
+            aActor.href = activity.actor.url;
 
-            const imgUser = frag.querySelector<HTMLImageElement>("img.nicofeed-user-icon")!;
-            imgUser.src = activity.actor.iconUrl;
+            const imgIcon = frag.querySelector<HTMLImageElement>("img.nicofeed-actor-icon")!;
+            imgIcon.src = activity.actor.iconUrl;
 
-            const spanUser = frag.querySelector<HTMLSpanElement>("span.nicofeed-user-name")!;
-            spanUser.textContent = activity.actor.name;
+            const spanName = frag.querySelector<HTMLSpanElement>("span.nicofeed-actor-name")!;
+            spanName.textContent = activity.actor.name;
         }
         else {
-            const divUser = frag.querySelector<HTMLDivElement>("a.nicofeed-user")!
-            divUser.classList.add("hide");
+            const aActor = frag.querySelector<HTMLDivElement>("a.nicofeed-actor-anchor")!
+            aActor.classList.add("hide");
         }
 
         const miCreateFilter = frag.querySelector<HTMLAnchorElement>("a[data-for='create-filter']")!;
