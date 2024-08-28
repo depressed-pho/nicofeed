@@ -116,9 +116,17 @@ function parseActivity(json: any): Activity {
 
 function parseActivityKind(kind: string): ActivityKind {
     switch (kind) {
+        case "nicoad.user.advertise.nicolive.program":
+        case "nicoad.user.advertise.nicoseiga.illust":
+        case "nicoad.user.advertise.niconisolid.work":
+        case "nicoad.user.advertise.nicovideo.video":
+            return "advertise";
+
+        case "nicolive.channel.program.reserve":
         case "nicolive.user.program.reserve":
             return "schedule";
 
+        case "nicolive.channel.program.onairs":
         case "nicolive.user.program.onairs":
             return "start";
 
@@ -134,8 +142,12 @@ function parseActivityKind(kind: string): ActivityKind {
         case "nicovideo.user.mylist.add.video":
             return "list";
 
+        case "nicochannel.channel.blomaga.article.publish":
         case "nicoseiga.user.episode.upload":
         case "nicoseiga.user.illust.upload":
+            // THINKME: Should we have a separate kind for this?
+        case "niconisolid.user.work.update":
+        case "niconisolid.user.work.upload":
         case "nicovideo.user.video.upload":
             return "upload";
 
@@ -170,6 +182,9 @@ function parseContentType(type: string): ContentType {
         case "comic":
         case "comicEpisode":
             return "comic";
+
+        case "article":
+            return "article";
 
         case "solidWork":
             return "model";
